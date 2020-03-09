@@ -1,0 +1,25 @@
+{
+  "name": "redis-playground",
+  "version": "1.0.0",
+  "description": "Test about the redis commands with testing data",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuneJobs/redis-playground.git"
+  },
+  "keywords": [
+    "redis"
+  ],
+  "author": "Junhee Park",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuneJobs/redis-playground/issues"
+  },
+  "homepage": "https://github.com/JuneJobs/redis-playground#readme",
+  "dependencies": {
+    "ioredis": "^4.16.0"
+  }
+}
