@@ -15,42 +15,69 @@ let fnInsertRowData = (keyQty) => {
         if(err) {
             console.log(err);
         } else {
+            console.log('Clear test keys complete.');
             redisCli.flushall();
             let cnt = 0;
-            for (let i = 0; i < keyQty; i++) {
-                redisCli.set(`K${util.pad(i, 6)}`, `V${util.pad(i, 6)}`, ()=>{
-                    // if(cnt === keyQty -1) {
-                    //     console.log('Insert test keys complete.');
-                    // }
-                    // cnt++;
-                });
-            }
+            let timer = setInterval(()=>{
+                for (let i = cnt; i < cnt+1000; i++) {
+                    redisCli.set(`K${util.pad(i, 6)}`, `V${util.pad(i, 6)}`, ()=>{
+                        if(cnt === keyQty -1) {
+                            console.log('All test keys are generated.');
+                            clearInterval(timer);
+                        }
+                        cnt++;
+                    });
+                }
+            }, 1000);
         }
     });
 }
-let fnScanTest = (testCnt) => {
+let fnScanTest = (scanTestCount, scanInterval) => {
     let cnt = 0;
+    let lastScanValue = [];
+    let nextLastScanValue = [];
     let timer = setInterval(()=>{
         redisCli.scan("0", (err, res)=>{
             if(err) {
                 console.log(err);
             } else {
                 if(res !== null) {
-                    console.log(res);       
+                    if(JSON.stringify(lastScanValue) === JSON.stringify(res)) {
+                        console.log(`%cCursor 0 values are same. next cursor is ${res[0]}.`, "color:green");
+                    } else {
+                        console.log(`Cursor 0 values are different. next cursor is ${res[0]}. Values are ${JSON.stringify(res[1])}`);
+                    }
+                    lastScanValue = res;
                 }
+                redisCli.scan(res[0], (err, nextRes)=>{
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        if(nextRes !== null) {
+                            if(JSON.stringify(nextLastScanValue) === JSON.stringify(nextRes)) {
+                                console.log(`%c->${res[0]} values are same. next cursor is ${nextRes[0]}.`, "color:green");
+                            } else {
+                                console.log(`->${res[0]} values are different. next cursor is ${nextRes[0]}. Values are ${JSON.stringify(nextRes[1])}`);
+                            }
+                            nextLastScanValue = nextRes;
+                        }
+                    }
+                })
             }
-            if(cnt === testCnt) {
+            if(cnt === scanTestCount) {
                 clearInterval(timer);
             }
             cnt ++;            
         });
-    }, 2000);
+    }, scanInterval);
 }
 
 //main
 let main = () => {
     let keyQty = 1000 * 1000;
+    let scanTestCount = 10000;
+    let scanInterval = 1000;
     fnInsertRowData(keyQty);
-    fnScanTest(10);
+    fnScanTest(scanTestCount, scanInterval);
 }
 main();
