@@ -10,7 +10,11 @@ let util = {
     }
 }
 
-let fnInsertRowData = (keyQty) => {
+/** 
+  * Insert Test data
+  * @param {keyQty} key quantity
+  */
+let fnInsertTestData = (keyQty) => {
     redisCli.get(`K${keyQty-1}`, (err, res) => {
         if(err) {
             console.log(err);
@@ -32,11 +36,17 @@ let fnInsertRowData = (keyQty) => {
         }
     });
 }
+/** 
+  * Insert Test data
+  * @param {scanTestCount} Scan command run count.
+  * @param {scanInterval} The interval of scan command execution.
+  */
 let fnScanTest = (scanTestCount, scanInterval) => {
     let cnt = 0;
     let lastScanValue = [];
     let nextLastScanValue = [];
     let timer = setInterval(()=>{
+        //Start at cursor 0
         redisCli.scan("0", (err, res)=>{
             if(err) {
                 console.log(err);
@@ -49,6 +59,7 @@ let fnScanTest = (scanTestCount, scanInterval) => {
                     }
                     lastScanValue = res;
                 }
+                //Scan next cursor from 0
                 redisCli.scan(res[0], (err, nextRes)=>{
                     if(err) {
                         console.log(err);
@@ -77,7 +88,7 @@ let main = () => {
     let keyQty = 1000 * 1000;
     let scanTestCount = 10000;
     let scanInterval = 1000;
-    fnInsertRowData(keyQty);
+    fnInsertTestData(keyQty);
     fnScanTest(scanTestCount, scanInterval);
 }
 main();
