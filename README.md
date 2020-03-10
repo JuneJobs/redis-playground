@@ -14,4 +14,4 @@ $ brew install redis
 ```shell
 
 
-node package installa
+node package install
