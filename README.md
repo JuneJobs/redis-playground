@@ -32,6 +32,7 @@ $ node app.js  # NodeJS 실행
 
 ### 5. 결과
 ```shell
+...
 Cursor 0 values are same. next cursor is 22528.
 ->22528 values are different. next cursor is 13312. Values are ["K020786","K012805","K024600","K006593","K027855","K027898","K021350","K028085","K001383","K025835"]
 Cursor 0 values are different. next cursor is 26624. Values are ["K029623","K001216","K000055","K027436","K024161","K021043","K005650","K021445","K009939","K009753"]
@@ -48,4 +49,5 @@ Cursor 0 values are same. next cursor is 18432.
 ->18432 values are same. next cursor is 41984.
 Cursor 0 values are same. next cursor is 18432.
 ->18432 values are same. next cursor is 41984.
+...
 ```
